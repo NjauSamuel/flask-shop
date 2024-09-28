@@ -17,7 +17,7 @@ Welcome to the Flask E-commerce Shop! This application is built using the Flask 
 - **Alpine.js**: A lightweight JavaScript framework for adding interactivity to your web pages.
 - **Tailwind CSS**: A utility-first CSS framework for styling.
 
-### Note: You'll need internet to run the application locally since tailwind and alpine are from a cdn. 
+### Note: You'll need internet to run the application locally since Tailwind and Alpine JS are from a CDN. 
 
 ## Installation
 
@@ -25,7 +25,7 @@ To get started with the Flask E-commerce Shop, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/flask-shop.git
+   git clone https://github.com/NjauSamuel/flask-shop.git
    cd your-repo-name
 
    ```
