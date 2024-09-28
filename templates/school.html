@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+<body>
+    <nav class="bg-gray-100 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Brand -->
+             <div>
+                <a class="text-xl font-bold text-gray-800" href="{{ url_for('home') }}">
+                    KOSSA-E-Shop
+                </a>
+            </div>
+        
+            <!-- Toggler for mobile view -->
+            <button
+                class="block lg:hidden text-gray-500 focus:outline-none"
+                @click="open = !open">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+        
+            <!-- Collapsible Menu for Mobile View -->
+            <div x-data="{ open: false }" class="lg:hidden">
+                <div x-show="open" class="bg-white shadow-md">
+                    <form class="p-4">
+                        <!-- Your form fields go here -->
+                        <input type="text" placeholder="Search..." class="border rounded p-2 w-full">
+                    </form>
+                    <ul class="p-4">
+                        <!-- Your list items go here -->
+                        <li><a href="#" class="block py-2">Item 1</a></li>
+                        <li><a href="#" class="block py-2">Item 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        
+            <!-- Form and UL for Large View -->
+            <div class="hidden lg:flex flex-col items-center">
+                <form class="p-4">
+                    <!-- Your form fields go here -->
+                    <input type="text" placeholder="Search..." class="border rounded p-2 w-full">
+                </form>
+                <ul class="p-4">
+                    <!-- Your list items go here -->
+                    <li><a href="#" class="block py-2">Item 1</a></li>
+                    <li><a href="#" class="block py-2">Item 2</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav
+         class="bg-gray-100 p-4 shadow-md"
+         x-data="{ open: false, dropdownOpen: false }">
+         <div class="container mx-auto flex justify-between items-center">
+            <!-- Brand -->
+            <a
+               class="text-xl font-bold text-gray-800"
+               href="{{ url_for('home') }}"
+               >KOSSA-E-Shop</a
+            >
+
+            <!-- Toggler for mobile view -->
+            <button
+               class="block lg:hidden text-gray-500 focus:outline-none"
+               aria-label="Toggle navigation"
+               @click="open = !open">
+               <i class="fa fa-bars text-xl"></i>
+            </button>
+
+            <!-- Collapsible content -->
+            <div
+               class="lg:flex lg:items-center lg:space-x-6"
+               :class="{ 'hidden': !open, 'block': open }">
+               <!-- Search Form -->
+               <form
+                  class="flex space-x-2 mb-4 lg:mb-0"
+                  action="url_for('search')">
+                  <input
+                     class="border border-gray-300 rounded-md px-4 py-2 w-full lg:w-auto focus:outline-none"
+                     type="search"
+                     name="query"
+                     placeholder="Search"
+                     size="40"
+                     required />
+                  <input
+                     class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer"
+                     type="submit"
+                     value="Search" />
+               </form>
+
+               <!-- Navigation links -->
+               <ul class="flex space-x-6 items-center">
+                  {% if not current_user.is_authenticated %}
+                  <li>
+                     <a
+                        class="text-gray-700 hover:text-gray-900"
+                        href="{{ url_for('home') }}"
+                        >Home</a
+                     >
+                  </li>
+                  <li>
+                     <a
+                        class="text-gray-700 hover:text-gray-900"
+                        href="url_for('login')"
+                        >Login</a
+                     >
+                  </li>
+                  <li>
+                     <a
+                        class="text-gray-700 hover:text-gray-900"
+                        href="url_for('register')"
+                        >Register</a
+                     >
+                  </li>
+                  {% else %}
+                  <li>
+                     <a class="text-gray-700 hover:text-gray-900" href="#">
+                        <i class="fa fa-bell text-xl"></i>
+                     </a>
+                  </li>
+                  <li>
+                     <a
+                        class="text-gray-700 hover:text-gray-900"
+                        href="{{ url_for('cart') }}">
+                        <i class="fa fa-shopping-cart text-xl"></i>
+                     </a>
+                  </li>
+
+                  <!-- Dropdown -->
+                  <li class="relative">
+                     <a
+                        class="text-gray-700 hover:text-gray-900 flex items-center space-x-2 cursor-pointer"
+                        @click="dropdownOpen = !dropdownOpen">
+                        <i class="fa fa-user-circle text-xl"></i>
+                        <span>{{ current_user.name }}</span>
+                     </a>
+                     <div
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
+                        x-show="dropdownOpen"
+                        @click.away="dropdownOpen = false">
+                        <a
+                           class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                           href="{{ url_for('orders') }}">
+                           Orders
+                        </a>
+                        {% if current_user.admin == 1 %}
+                        <a
+                           class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                           href="{{ url_for('admin.dashboard') }}">
+                           Admin
+                        </a>
+                        {% endif %}
+                        <a
+                           class="block px-4 py-2 text-red-600 hover:bg-gray-100"
+                           href="{{ url_for('logout') }}">
+                           Logout
+                        </a>
+                     </div>
+                  </li>
+                  {% endif %}
+               </ul>
+            </div>
+         </div>
+      </nav>
+
+      <nav class="bg-gray-100 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+           <!-- Brand -->
+           <a
+              class="text-xl font-bold text-gray-800"
+              href="{{ url_for('home') }}"
+              >KOSSA-E-Shop</a
+           >
+
+           <!-- Toggler for mobile view -->
+           <button
+              class="block lg:hidden text-gray-500 focus:outline-none"
+              aria-label="Toggle navigation"
+              @click="open = !open">
+              <i class="fa fa-bars text-xl"></i>
+           </button>
+
+           <!-- Collapsible content -->
+           <div
+              class="lg:flex lg:items-center lg:space-x-6"
+              :class="{ 'hidden': !open, 'block': open }">
+              <!-- Search Form -->
+              <form
+                 class="flex space-x-2 mb-4 lg:mb-0"
+                 <!--
+                 action="url_for('search')"
+                 -->
+                 >
+                 <input
+                    class="border border-gray-300 rounded-md px-4 py-2 w-full lg:w-auto focus:outline-none"
+                    type="search"
+                    name="query"
+                    placeholder="Search"
+                    size="40"
+                    required />
+                 <input
+                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer"
+                    type="submit"
+                    value="Search" />
+              </form>
+
+              <!-- Navigation links -->
+              <ul class="flex space-x-6 items-center">
+                 {% if not current_user.is_authenticated %}
+                 <li>
+                    <a
+                       class="text-gray-700 hover:text-gray-900"
+                       href="{{ url_for('home') }}"
+                       >Home</a
+                    >
+                 </li>
+                 <li>
+                    <a
+                       class="text-gray-700 hover:text-gray-900"
+                       <!--
+                       href="url_for('login')"
+                       -->
+                       >Login</a
+                    >
+                 </li>
+                 <li>
+                    <a
+                       class="text-gray-700 hover:text-gray-900"
+                       <!--
+                       href="url_for('register')"
+                       -->
+                       >Register</a
+                    >
+                 </li>
+                 {% else %}
+                 <li>
+                    <a class="text-gray-700 hover:text-gray-900" href="#">
+                       <i class="fa fa-bell text-xl"></i>
+                    </a>
+                 </li>
+                 <li>
+                    <a
+                       class="text-gray-700 hover:text-gray-900"
+                       href="{{ url_for('cart') }}">
+                       <i class="fa fa-shopping-cart text-xl"></i>
+                    </a>
+                 </li>
+
+                 <!-- Dropdown -->
+                 <li class="relative">
+                    <a
+                       class="text-gray-700 hover:text-gray-900 flex items-center space-x-2 cursor-pointer"
+                       @click="dropdownOpen = !dropdownOpen">
+                       <i class="fa fa-user-circle text-xl"></i>
+                       <span>{{ current_user.name }}</span>
+                    </a>
+                    <div
+                       class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
+                       x-show="dropdownOpen"
+                       @click.away="dropdownOpen = false">
+                       <a
+                          class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                          href="{{ url_for('orders') }}"
+                          >Orders</a
+                       >
+                       {% if current_user.admin == 1 %}
+                       <a
+                          class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                          href="{{ url_for('admin.dashboard') }}"
+                          >Admin</a
+                       >
+                       {% endif %}
+                       <a
+                          class="block px-4 py-2 text-red-600 hover:bg-gray-100"
+                          href="{{ url_for('logout') }}"
+                          >Logout</a
+                       >
+                    </div>
+                 </li>
+                 {% endif %}
+              </ul>
+           </div>
+        </div>
+     </nav>
+    
+    
+</body>
+</html>

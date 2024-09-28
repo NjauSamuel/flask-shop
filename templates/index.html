@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Kossa Shop
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="text-2xl font-bold">New Arrivals</h3>
+
+    <br>
+
+    <div class="items">
+        {% for item in items[::-1] %}
+            <a href="We'll put here the link to an individual product. ">
+                <div class="item">
+                    <div class="item-wrapper">
+                        <div class="img-wrapper">
+                            <img src="{{ item.image }}" class="pic">
+                        </div>
+                        {{ item.name }}
+                        <span class="right-item">${{ item.price }}</span><br>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <i class="fa fa-star checked"></i>
+                            <span class="text-muted" >({{ range(1, 51) | random }})</span>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
