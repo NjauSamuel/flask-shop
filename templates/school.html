@@ -1,3 +1,6 @@
+<!-- This section contains the old navbar.  -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,286 +19,106 @@
     
 </head>
 <body>
-    <nav class="bg-gray-100 p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Brand -->
-             <div>
-                <a class="text-xl font-bold text-gray-800" href="{{ url_for('home') }}">
-                    KOSSA-E-Shop
-                </a>
-            </div>
-        
-            <!-- Toggler for mobile view -->
-            <button
-                class="block lg:hidden text-gray-500 focus:outline-none"
-                @click="open = !open">
-                <i class="fa fa-bars text-xl"></i>
-            </button>
-        
-            <!-- Collapsible Menu for Mobile View -->
-            <div x-data="{ open: false }" class="lg:hidden">
-                <div x-show="open" class="bg-white shadow-md">
-                    <form class="p-4">
-                        <!-- Your form fields go here -->
-                        <input type="text" placeholder="Search..." class="border rounded p-2 w-full">
-                    </form>
-                    <ul class="p-4">
-                        <!-- Your list items go here -->
-                        <li><a href="#" class="block py-2">Item 1</a></li>
-                        <li><a href="#" class="block py-2">Item 2</a></li>
-                    </ul>
-                </div>
-            </div>
-        
-            <!-- Form and UL for Large View -->
-            <div class="hidden lg:flex flex-col items-center">
-                <form class="p-4">
-                    <!-- Your form fields go here -->
-                    <input type="text" placeholder="Search..." class="border rounded p-2 w-full">
-                </form>
-                <ul class="p-4">
-                    <!-- Your list items go here -->
-                    <li><a href="#" class="block py-2">Item 1</a></li>
-                    <li><a href="#" class="block py-2">Item 2</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <nav
-         class="bg-gray-100 p-4 shadow-md"
-         x-data="{ open: false, dropdownOpen: false }">
-         <div class="container mx-auto flex justify-between items-center">
-            <!-- Brand -->
-            <a
-               class="text-xl font-bold text-gray-800"
-               href="{{ url_for('home') }}"
-               >KOSSA-E-Shop</a
-            >
-
-            <!-- Toggler for mobile view -->
-            <button
-               class="block lg:hidden text-gray-500 focus:outline-none"
-               aria-label="Toggle navigation"
-               @click="open = !open">
-               <i class="fa fa-bars text-xl"></i>
-            </button>
-
-            <!-- Collapsible content -->
-            <div
-               class="lg:flex lg:items-center lg:space-x-6"
-               :class="{ 'hidden': !open, 'block': open }">
-               <!-- Search Form -->
-               <form
-                  class="flex space-x-2 mb-4 lg:mb-0"
-                  action="url_for('search')">
-                  <input
-                     class="border border-gray-300 rounded-md px-4 py-2 w-full lg:w-auto focus:outline-none"
-                     type="search"
-                     name="query"
-                     placeholder="Search"
-                     size="40"
-                     required />
-                  <input
-                     class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer"
-                     type="submit"
-                     value="Search" />
-               </form>
-
-               <!-- Navigation links -->
-               <ul class="flex space-x-6 items-center">
-                  {% if not current_user.is_authenticated %}
-                  <li>
-                     <a
-                        class="text-gray-700 hover:text-gray-900"
-                        href="{{ url_for('home') }}"
-                        >Home</a
-                     >
-                  </li>
-                  <li>
-                     <a
-                        class="text-gray-700 hover:text-gray-900"
-                        href="url_for('login')"
-                        >Login</a
-                     >
-                  </li>
-                  <li>
-                     <a
-                        class="text-gray-700 hover:text-gray-900"
-                        href="url_for('register')"
-                        >Register</a
-                     >
-                  </li>
-                  {% else %}
-                  <li>
-                     <a class="text-gray-700 hover:text-gray-900" href="#">
-                        <i class="fa fa-bell text-xl"></i>
-                     </a>
-                  </li>
-                  <li>
-                     <a
-                        class="text-gray-700 hover:text-gray-900"
-                        href="{{ url_for('cart') }}">
-                        <i class="fa fa-shopping-cart text-xl"></i>
-                     </a>
-                  </li>
-
-                  <!-- Dropdown -->
-                  <li class="relative">
-                     <a
-                        class="text-gray-700 hover:text-gray-900 flex items-center space-x-2 cursor-pointer"
-                        @click="dropdownOpen = !dropdownOpen">
-                        <i class="fa fa-user-circle text-xl"></i>
-                        <span>{{ current_user.name }}</span>
-                     </a>
-                     <div
-                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
-                        x-show="dropdownOpen"
-                        @click.away="dropdownOpen = false">
-                        <a
-                           class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                           href="{{ url_for('orders') }}">
-                           Orders
-                        </a>
-                        {% if current_user.admin == 1 %}
-                        <a
-                           class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                           href="{{ url_for('admin.dashboard') }}">
-                           Admin
-                        </a>
-                        {% endif %}
-                        <a
-                           class="block px-4 py-2 text-red-600 hover:bg-gray-100"
-                           href="{{ url_for('logout') }}">
-                           Logout
-                        </a>
-                     </div>
-                  </li>
-                  {% endif %}
-               </ul>
-            </div>
-         </div>
-      </nav>
-
-      <nav class="bg-gray-100 p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-           <!-- Brand -->
-           <a
-              class="text-xl font-bold text-gray-800"
-              href="{{ url_for('home') }}"
-              >KOSSA-E-Shop</a
-           >
-
-           <!-- Toggler for mobile view -->
-           <button
-              class="block lg:hidden text-gray-500 focus:outline-none"
-              aria-label="Toggle navigation"
-              @click="open = !open">
-              <i class="fa fa-bars text-xl"></i>
+   <nav class="bg-gray-100 p-4 shadow-md top-0 z-10"
+   x-data="{ open: false, dropdownOpen: false, lastScrollY: window.scrollY, sticky: false }"
+   x-init="window.addEventListener('scroll', () => {
+       if (window.scrollY < lastScrollY) {
+           sticky = true;
+       } else {
+           sticky = false;
+       }
+       lastScrollY = window.scrollY;
+   })"
+   :class="{ 'sticky': sticky }"
+>
+   <div class="container mx-auto flex justify-between items-center lg:hidden">
+       <!-- Brand For Mobile View -->
+       <a
+           class="text-xl font-bold text-gray-800"
+           href="{{ url_for('home') }}">
+           KOSSA-E-Shop
+       </a>
+       <div class="flex items-center md:order-2 space-x-3 rtl:space-x-reverse">
+           <!-- Dark Mode Toggle Button -->
+           <button id="theme-toggle"
+               class="text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 p-2 rounded-lg">
+               <!-- Sun Icon (for light mode) -->
+               <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                   xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd"
+                       d="M10 2a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 1.78a1 1 0 00-1.42 0l-1.41 1.42a1 1 0 101.42 1.42l1.41-1.42a1 1 0 000-1.42zM18 10a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zM4.22 3.78a1 1 0 011.42 0l1.41 1.42a1 1 0 11-1.42 1.42L4.22 5.2a1 1 0 010-1.42zM10 18a1 1 0 01-1-1v-2a1 1 0 012 0v2a1 1 0 01-1 1zm6.78-2.22a1 1 0 00-1.42 0l-1.41 1.42a1 1 0 001.42 1.42l1.41-1.42a1 1 0 000-1.42zM4.22 16.22a1 1 0 00-1.42 0l-1.41 1.42a1 1 0 101.42 1.42l1.41-1.42a1 1 0 000-1.42zM14 10a4 4 0 11-8 0 4 4 0 018 0zm-4 2a2 2 0 100-4 2 2 0 000 4z"
+                       clip-rule="evenodd"></path>
+               </svg>
+               <!-- Moon Icon (for dark mode) -->
+               <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                   xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd"
+                       d="M17.293 13.293A8 8 0 116.707 2.707a1 1 0 011.026.225 1 1 0 01.03 1.388 6 6 0 107.9 7.9 1 1 0 011.612 1.064 1 1 0 01-.225 1.026z"
+                       clip-rule="evenodd"></path>
+               </svg>
            </button>
 
-           <!-- Collapsible content -->
-           <div
-              class="lg:flex lg:items-center lg:space-x-6"
-              :class="{ 'hidden': !open, 'block': open }">
-              <!-- Search Form -->
-              <form
-                 class="flex space-x-2 mb-4 lg:mb-0"
-                 <!--
-                 action="url_for('search')"
-                 -->
-                 >
-                 <input
-                    class="border border-gray-300 rounded-md px-4 py-2 w-full lg:w-auto focus:outline-none"
-                    type="search"
-                    name="query"
-                    placeholder="Search"
-                    size="40"
-                    required />
-                 <input
-                    class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer"
-                    type="submit"
-                    value="Search" />
-              </form>
+           <!-- Mobile menu button (hamburger) -->
+           <button data-collapse-toggle="navbar-sticky" type="button"
+               class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+               aria-controls="navbar-sticky" aria-expanded="false">
+               <span class="sr-only">Open main menu</span>
+               <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                   viewBox="0 0 17 14">
+                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                       d="M1 1h15M1 7h15M1 13h15" />
+               </svg>
+           </button>
+       </div>
+       <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+           <ul
+               class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+               <li>
+                   <a href="#"
+                       class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                       aria-current="page">Home</a>
+               </li>
+               <li>
+                   <a href="#"
+                       class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Products</a>
+               </li>
+               <li>
+                   <a href="#"
+                       class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Orders</a>
+               </li>
+               <li>
+                   <a href="#contact"
+                       class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
+               </li>
+           </ul>
 
-              <!-- Navigation links -->
-              <ul class="flex space-x-6 items-center">
-                 {% if not current_user.is_authenticated %}
-                 <li>
-                    <a
-                       class="text-gray-700 hover:text-gray-900"
-                       href="{{ url_for('home') }}"
-                       >Home</a
-                    >
-                 </li>
-                 <li>
-                    <a
-                       class="text-gray-700 hover:text-gray-900"
-                       <!--
-                       href="url_for('login')"
-                       -->
-                       >Login</a
-                    >
-                 </li>
-                 <li>
-                    <a
-                       class="text-gray-700 hover:text-gray-900"
-                       <!--
-                       href="url_for('register')"
-                       -->
-                       >Register</a
-                    >
-                 </li>
-                 {% else %}
-                 <li>
-                    <a class="text-gray-700 hover:text-gray-900" href="#">
-                       <i class="fa fa-bell text-xl"></i>
-                    </a>
-                 </li>
-                 <li>
-                    <a
-                       class="text-gray-700 hover:text-gray-900"
-                       href="{{ url_for('cart') }}">
-                       <i class="fa fa-shopping-cart text-xl"></i>
-                    </a>
-                 </li>
-
-                 <!-- Dropdown -->
-                 <li class="relative">
-                    <a
-                       class="text-gray-700 hover:text-gray-900 flex items-center space-x-2 cursor-pointer"
-                       @click="dropdownOpen = !dropdownOpen">
-                       <i class="fa fa-user-circle text-xl"></i>
-                       <span>{{ current_user.name }}</span>
-                    </a>
-                    <div
-                       class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
-                       x-show="dropdownOpen"
-                       @click.away="dropdownOpen = false">
-                       <a
-                          class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                          href="{{ url_for('orders') }}"
-                          >Orders</a
-                       >
-                       {% if current_user.admin == 1 %}
-                       <a
-                          class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                          href="{{ url_for('admin.dashboard') }}"
-                          >Admin</a
-                       >
-                       {% endif %}
-                       <a
-                          class="block px-4 py-2 text-red-600 hover:bg-gray-100"
-                          href="{{ url_for('logout') }}"
-                          >Logout</a
-                       >
-                    </div>
-                 </li>
-                 {% endif %}
-              </ul>
+           <!-- Mobile Sign Up / Sign In buttons -->
+           <div class="block mt-4 md:hidden">
+               <button type="button"
+                   class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-2">
+                   Sign Up
+               </button>
+               <button type="button"
+                   class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                   Sign In
+               </button>
            </div>
-        </div>
-     </nav>
+
+           <!-- Desktop Sign Up / Sign In buttons -->
+           <div class="hidden md:flex md:ml-auto space-x-2 rtl:space-x-reverse">
+               <button type="button"
+                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-8">
+                   Sign Up
+               </button>
+               <button type="button"
+                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                   Sign In
+               </button>
+           </div>
+       </div>
+
+   </div>
+</nav>
     
     
 </body>

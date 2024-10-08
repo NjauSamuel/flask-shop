@@ -1,29 +1,7 @@
-/* The Main Container of the base class */
-.responsive {
-	padding: 10vh 0;
+/* The Store Image Background */
+.bg-store {
+    background-image: url('/static/images/store.jpg');
 }
-/* Small devices (sm) */
-@media (min-width: 576px) {
-    .responsive {
-        max-width: 540px;
-    }
-}
-  
-/* Medium devices (md) */
-@media (min-width: 768px) {
-    .responsive {
-        max-width: 720px;
-    }
-}
-  
-/* Large devices (lg) */
-@media (min-width: 992px) {
-    .responsive {
-        max-width: 960px;
-    }
-}
-
-
 
 /* The items passed to the home page through flask */
 .items {
