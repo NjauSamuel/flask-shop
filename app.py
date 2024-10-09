@@ -1,6 +1,7 @@
+from functools import wraps
 import secrets
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt, jwt_required
 from models import Item, db, User
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
@@ -22,6 +23,19 @@ with app.app_context():
     db.create_all()
 
 
+def jwt_required_redirect(redirect_url):
+    """Custom JWT required decorator that redirects to a given URL if unauthorized."""
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            try:
+                get_jwt()
+                return fn(*args, **kwargs)
+            except Exception:
+                return redirect(redirect_url)
+        return wrapper
+    return decorator
+
 # Fake User class
 # class User:
 #     def __init__(self, is_authenticated, name):
@@ -42,7 +56,7 @@ def landing_page():
     return render_template("index.html", current_user=current_user, items=items)
 
 @app.route('/home')
-@jwt_required()
+@jwt_required_redirect("/")
 def home():
     return render_template('home.html')
 
@@ -88,6 +102,15 @@ def login():
         return {"access_token": access_token}, 200
 
     return {"msg": "Bad username or password."}, 401
+
+
+@app.errorhandler(401)
+def unauthorized_error(error):
+    return redirect(url_for('/'))
+
+@app.route('/unauthorized')
+def unauthorized():
+    return render_template("index.html")
 
 
 @app.context_processor
