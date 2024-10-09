@@ -1,6 +1,6 @@
 import secrets
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from models import Item, db, User
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
@@ -29,7 +29,7 @@ with app.app_context():
 #         self.name = name
 
 @app.route('/')
-def home():
+def landing_page():
     current_user = 1
 
     # Create a fake current_user object and set is_authenticated to True
@@ -41,6 +41,10 @@ def home():
 
     return render_template("index.html", current_user=current_user, items=items)
 
+@app.route('/home')
+@jwt_required()
+def home():
+    return render_template('home.html')
 
 @app.route('/signup', methods=['GET'])
 def signup_page():
