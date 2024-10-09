@@ -23,18 +23,18 @@ with app.app_context():
     db.create_all()
 
 
-def jwt_required_redirect(redirect_url):
-    """Custom JWT required decorator that redirects to a given URL if unauthorized."""
-    def decorator(fn):
-        @wraps(fn)
-        def wrapper(*args, **kwargs):
-            try:
-                get_jwt()
-                return fn(*args, **kwargs)
-            except Exception:
-                return redirect(redirect_url)
-        return wrapper
-    return decorator
+# def jwt_required_redirect(redirect_url):
+#     """Custom JWT required decorator that redirects to a given URL if unauthorized."""
+#     def decorator(fn):
+#         @wraps(fn)
+#         def wrapper(*args, **kwargs):
+#             try:
+#                 get_jwt()
+#                 return fn(*args, **kwargs)
+#             except Exception:
+#                 return redirect(redirect_url)
+#         return wrapper
+#     return decorator
 
 # Fake User class
 # class User:
@@ -56,7 +56,7 @@ def landing_page():
     return render_template("index.html", current_user=current_user, items=items)
 
 @app.route('/home')
-@jwt_required_redirect("/")
+@jwt_required()
 def home():
     return render_template('home.html')
 
@@ -106,12 +106,7 @@ def login():
 
 @app.errorhandler(401)
 def unauthorized_error(error):
-    return redirect(url_for('/'))
-
-@app.route('/unauthorized')
-def unauthorized():
     return render_template("index.html")
-
 
 @app.context_processor
 def inject_now():

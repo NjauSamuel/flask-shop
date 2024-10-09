@@ -28,27 +28,66 @@
     </div>
 
     <script>
+        async function accessHome() {
+            const accessToken = localStorage.getItem('access_token'); // Get the token from local storage
+            if (!accessToken) {
+                alert('No access token found. Please log in.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/home', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}` // Include the token here
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.text();
+                    document.body.innerHTML = data; // Handle successful response
+                } else {
+                    const result = await response.json();
+                    alert(result.msg);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred. Please try again later.');
+            }
+        }
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
 
-            const result = await response.json();
-            if (response.ok) {
-                // Save the token to local storage or session storage
-                localStorage.setItem('access_token', result.access_token);
-                alert('Login successful!');
-                window.location.href = '/home'; // Redirect to home page after successful login
-            } else {
-                alert(result.msg);
+                const result = await response.json();
+                if (response.ok) {
+                    // Save the token to local storage or session storage
+                    localStorage.setItem('access_token', result.access_token);
+                    alert('Login successful!');
+                    accessHome(); // Redirect to home page after successful login
+                } else {
+                    // Handle different types of errors based on status code
+                    if (response.status === 401) {
+                        alert('Invalid username or password.'); // More specific error message
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred. Please try again later.');
             }
         });
     </script>
