@@ -30,7 +30,7 @@ To get started with the Flask E-commerce Shop, follow these steps:
 
    ```
 
-2. Create a virtual environment (optional but recommended):
+2. Create a virtual environment (Only Attempt if you know what you're Doing. ):
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
