@@ -1,6 +1,13 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from models import Item, db
 from datetime import datetime
+# The Class for implementing Logging in flask. 
+from flask_login import login_user, current_user, login_required, logout_user
+# Importing WTF forms for Registration and Login
+from authForms import LoginForm, RegisterForm
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 
@@ -42,5 +49,6 @@ def inject_now():
 
 
 
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5050)
