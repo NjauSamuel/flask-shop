@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Login - Flask-O-shop
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-md mx-auto mt-20 min-h-[80vh]">
+        <h3 class="text-center text-2xl font-semibold text-gray-800">Log in to Flask-O-shop</h3>
+        <hr class="my-4">
+        
+        <!-- Flash Messages -->
+        {% with msgs = get_flashed_messages(with_categories=True) %}
+            {% for c, msg in msgs %}
+                {% if c == 'error' %}
+                    <div class="bg-red-100 text-red-700 p-4 mb-4 rounded">
+                        {{ msg | safe }}
+                    </div>
+                {% else %}
+                    <div class="bg-green-100 text-green-700 p-4 mb-4 rounded">
+                        {{ msg | safe }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+        
+        <!-- Login Form -->
+        <form method="POST" action="{{ url_for('login') }}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            {{ form.hidden_tag() }}
+            
+            <!-- Email Field -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">{{ form.email.label }}</label>
+                {{ form.email(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.email.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.email.errors[0] }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Password Field -->
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">{{ form.password.label }}</label>
+                {{ form.password(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                {% if form.password.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.password.errors[0] }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Login
+                </button>
+                <a href="{{ url_for('register') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                    Register
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
