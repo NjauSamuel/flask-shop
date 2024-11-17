@@ -33,7 +33,7 @@ To get started with the Flask E-commerce Shop, follow these steps:
 2. Create a virtual environment (Only Attempt if you know what you're Doing. ):
     ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    source venv\Scripts\activate  # On Linux / Mac use `venv/bin/activate`
     ```
 
 3. Install the required packages:
@@ -48,7 +48,7 @@ To get started with the Flask E-commerce Shop, follow these steps:
     flask run
     ```
 
-6. Open your web browser and go to http://127.0.0.1:5000 to view the application.
+6. Open your web browser and go to http://127.0.0.1:5050 to view the application.
 
 
 ## Author
