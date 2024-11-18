@@ -22,7 +22,7 @@ def send_confirmation_email(user_email) -> None:
 	msg = Message(
 		'Confirm Your Email Address',
 		recipients=[user_email],
-		sender=("Flask-O-shop Email Confirmation", os.environ["EMAIL"]),
+		sender=("Kossa Shop Email Confirmation", os.environ["EMAIL"]),
 		html=html,
 	)
 	mail.send(msg)

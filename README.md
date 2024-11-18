@@ -1,4 +1,4 @@
-# Flask-O-shop
+# Kossa Shop
 An E-Commerce app built with Python Flask
 
 **Features:**
