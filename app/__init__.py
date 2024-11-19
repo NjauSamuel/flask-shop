@@ -1,4 +1,5 @@
 import os, json
+import requests
 from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
@@ -148,7 +149,7 @@ def cart():
 		items.append(cart.item)
 		quantity.append(cart.quantity)
 		price_id_dict = {
-			"price": cart.item.price_id,
+			"price": cart.item.price,
 			"quantity": cart.quantity,
 			}
 		price_ids.append(price_id_dict)
@@ -178,61 +179,138 @@ def search():
 	items = Item.query.filter(Item.name.like(search)).all()
 	return render_template('home.html', items=items, search=True, query=query)
 
-# stripe stuffs
+# # stripe stuffs
+# @app.route('/payment_success')
+# def payment_success():
+# 	return render_template('success.html')
+
+# @app.route('/payment_failure')
+# def payment_failure():
+# 	return render_template('failure.html')
+
+# @app.route('/create-checkout-session', methods=['POST'])
+# def create_checkout_session():
+# 	data = json.loads(request.form['price_ids'].replace("'", '"'))
+# 	try:
+# 		checkout_session = stripe.checkout.Session.create(
+# 			client_reference_id=current_user.id,
+# 			line_items=data,
+# 			payment_method_types=[
+# 			  'card',
+# 			],
+# 			mode='payment',
+# 			success_url=url_for('payment_success', _external=True),
+# 			cancel_url=url_for('payment_failure', _external=True),
+# 		)
+# 	except Exception as e:
+# 		return str(e)
+# 	return redirect(checkout_session.url, code=303)
+
+# @app.route('/stripe-webhook', methods=['POST'])
+# def stripe_webhook():
+
+# 	if request.content_length > 1024*1024:
+# 		print("Request too big!")
+# 		abort(400)
+
+# 	payload = request.get_data()
+# 	sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
+# 	ENDPOINT_SECRET = os.environ.get('ENDPOINT_SECRET')
+# 	event = None
+
+# 	try:
+# 		event = stripe.Webhook.construct_event(
+# 		payload, sig_header, ENDPOINT_SECRET
+# 		)
+# 	except ValueError as e:
+# 		# Invalid payload
+# 		return {}, 400
+# 	except stripe.error.SignatureVerificationError as e:
+# 		# Invalid signature
+# 		return {}, 400
+
+# 	if event['type'] == 'checkout.session.completed':
+# 		session = event['data']['object']
+
+# 		# Fulfill the purchase...
+# 		fulfill_order(session)
+
+# 	# Passed signature verification
+# 	return {}, 200
+
+# Paystack API Key (use test key for testing)
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+
+
 @app.route('/payment_success')
 def payment_success():
-	return render_template('success.html')
+    return render_template('success.html')
 
 @app.route('/payment_failure')
 def payment_failure():
-	return render_template('failure.html')
+    return render_template('failure.html')
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-	data = json.loads(request.form['price_ids'].replace("'", '"'))
-	try:
-		checkout_session = stripe.checkout.Session.create(
-			client_reference_id=current_user.id,
-			line_items=data,
-			payment_method_types=[
-			  'card',
-			],
-			mode='payment',
-			success_url=url_for('payment_success', _external=True),
-			cancel_url=url_for('payment_failure', _external=True),
-		)
-	except Exception as e:
-		return str(e)
-	return redirect(checkout_session.url, code=303)
+    data = json.loads(request.form['price_ids'].replace("'", '"'))
+    
+    # Debugging step: Print the structure of `data`
+    print(data)
+    
+    # Prepare the Paystack payment link data
+    price = sum(int(item['price']) * int(item['quantity']) for item in data)
+    payload = {
+		'client_reference_id': current_user.id,  # Pass the user's ID as client_reference_id For payment Confirmation
+        'email': current_user.email,  # You may want to send the user's email
+        'amount': price * 100,
+        'callback_url': url_for('payment_success', _external=True),
+        'cancel_url': url_for('payment_failure', _external=True),
+        'webhook_url': url_for('paystack_webhook', _external=True),
+    }
+    
+    # Create the payment link using Paystack API
+    try:
+        response = requests.post(
+            'https://api.paystack.co/transaction/initialize',
+            headers={'Authorization': f'Bearer {PAYSTACK_SECRET_KEY}'},
+            data=payload
+        )
+        response_data = response.json()
 
-@app.route('/stripe-webhook', methods=['POST'])
-def stripe_webhook():
+        if response_data['status']:
+            return redirect(response_data['data']['authorization_url'])
+        else:
+            return "Payment Initialization Failed", 400
+    except Exception as e:
+        return str(e), 500
+	
+@app.route('/paystack-webhook', methods=['POST'])
+def paystack_webhook():
+    # if request.content_length > 1024 * 1024:
+    #     print("Request too big!")
+    #     abort(400)
 
-	if request.content_length > 1024*1024:
-		print("Request too big!")
-		abort(400)
+    payload = request.get_data()
 
-	payload = request.get_data()
-	sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-	ENDPOINT_SECRET = os.environ.get('ENDPOINT_SECRET')
-	event = None
+    signature = request.headers.get('X-Paystack-Signature')
 
-	try:
-		event = stripe.Webhook.construct_event(
-		payload, sig_header, ENDPOINT_SECRET
-		)
-	except ValueError as e:
-		# Invalid payload
-		return {}, 400
-	except stripe.error.SignatureVerificationError as e:
-		# Invalid signature
-		return {}, 400
+    # Paystack webhook secret key (must be set in Paystack dashboard)
+    PAYSTACK_SECRET = os.environ.get('PAYSTACK_SECRET')
 
-	if event['type'] == 'checkout.session.completed':
-		session = event['data']['object']
+    # Verify webhook signature
+    if signature != PAYSTACK_SECRET:
+        return 'Invalid signature', 400
 
-		# Fulfill the purchase...
-		fulfill_order(session)
+    event = json.loads(payload)
 
-	# Passed signature verification
-	return {}, 200
+    if event['event'] == 'charge.success':
+        # This means payment was successful
+        transaction = event['data']
+        
+		# Printing the transaction
+        print(transaction)
+    
+        # Fulfill the purchase here
+        fulfill_order(transaction)
+
+    return {}, 200

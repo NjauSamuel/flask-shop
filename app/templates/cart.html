@@ -3,7 +3,7 @@
 {% block title %}
 	Cart - Kossa Shop
 {% endblock %}
-<script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.paystack.co/v2/inline.js"></script>
 {% block content %}
 	{% with msgs =  get_flashed_messages(with_categories=True) %}
 	{% for c, msg in msgs %}
