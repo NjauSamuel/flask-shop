@@ -11,6 +11,10 @@ from itsdangerous import URLSafeTimedSerializer
 from .funcs import mail, send_confirmation_email, fulfill_order
 from dotenv import load_dotenv
 from .admin.routes import admin
+import hmac
+import hashlib
+import json
+from flask import request, jsonify
 
 
 load_dotenv()
@@ -179,64 +183,6 @@ def search():
 	items = Item.query.filter(Item.name.like(search)).all()
 	return render_template('home.html', items=items, search=True, query=query)
 
-# # stripe stuffs
-# @app.route('/payment_success')
-# def payment_success():
-# 	return render_template('success.html')
-
-# @app.route('/payment_failure')
-# def payment_failure():
-# 	return render_template('failure.html')
-
-# @app.route('/create-checkout-session', methods=['POST'])
-# def create_checkout_session():
-# 	data = json.loads(request.form['price_ids'].replace("'", '"'))
-# 	try:
-# 		checkout_session = stripe.checkout.Session.create(
-# 			client_reference_id=current_user.id,
-# 			line_items=data,
-# 			payment_method_types=[
-# 			  'card',
-# 			],
-# 			mode='payment',
-# 			success_url=url_for('payment_success', _external=True),
-# 			cancel_url=url_for('payment_failure', _external=True),
-# 		)
-# 	except Exception as e:
-# 		return str(e)
-# 	return redirect(checkout_session.url, code=303)
-
-# @app.route('/stripe-webhook', methods=['POST'])
-# def stripe_webhook():
-
-# 	if request.content_length > 1024*1024:
-# 		print("Request too big!")
-# 		abort(400)
-
-# 	payload = request.get_data()
-# 	sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-# 	ENDPOINT_SECRET = os.environ.get('ENDPOINT_SECRET')
-# 	event = None
-
-# 	try:
-# 		event = stripe.Webhook.construct_event(
-# 		payload, sig_header, ENDPOINT_SECRET
-# 		)
-# 	except ValueError as e:
-# 		# Invalid payload
-# 		return {}, 400
-# 	except stripe.error.SignatureVerificationError as e:
-# 		# Invalid signature
-# 		return {}, 400
-
-# 	if event['type'] == 'checkout.session.completed':
-# 		session = event['data']['object']
-
-# 		# Fulfill the purchase...
-# 		fulfill_order(session)
-
-# 	# Passed signature verification
-# 	return {}, 200
 
 # Paystack API Key (use test key for testing)
 PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
@@ -290,17 +236,25 @@ def paystack_webhook():
         print("Request too big!")
         abort(400)
 
-    payload = request.get_data()
+    payload = request.get_data(as_text=True) # Getting The Payload from the request
 
     signature = request.headers.get('X-Paystack-Signature')
 
     # Paystack webhook secret key (must be set in Paystack dashboard)
     PAYSTACK_SECRET = os.environ.get('PAYSTACK_SECRET_KEY')
 
-    # Verify webhook signature
-    # if signature != PAYSTACK_SECRET:
-    #     print('Invalid signature!')
-    #     return 'Invalid signature', 400
+	# Compute the expected signature
+    computed_signature = hmac.new(
+        PAYSTACK_SECRET.encode('utf-8'),
+        payload.encode('utf-8'),
+        hashlib.sha512
+    ).hexdigest()
+	
+    print(computed_signature)
+
+    # Compare the computed signature with the one from the headers (To verify source Authenticity)
+    if computed_signature != signature:
+        return "Invalid signature", 400
 
     event = json.loads(payload)
 
