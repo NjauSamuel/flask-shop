@@ -27,10 +27,15 @@ def send_confirmation_email(user_email) -> None:
 	)
 	mail.send(msg)
 
-def fulfill_order(session):
+def fulfill_order(user_email):
 	""" Fulfils order on successful payment """
 
-	uid = session['client_reference_id']
+	# Query the database to find the user by email
+	user = User.query.filter_by(email=user_email).first()
+	if not user:
+		raise ValueError(f"No user found with email: {user_email}")
+	
+	uid = user.id
 	order = Order(uid=uid, date=datetime.datetime.now(), status="processing")
 	db.session.add(order)
 	db.session.commit()

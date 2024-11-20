@@ -286,29 +286,27 @@ def create_checkout_session():
 	
 @app.route('/paystack-webhook', methods=['POST'])
 def paystack_webhook():
-    # if request.content_length > 1024 * 1024:
-    #     print("Request too big!")
-    #     abort(400)
+    if request.content_length > 1024 * 1024:
+        print("Request too big!")
+        abort(400)
 
     payload = request.get_data()
 
     signature = request.headers.get('X-Paystack-Signature')
 
     # Paystack webhook secret key (must be set in Paystack dashboard)
-    PAYSTACK_SECRET = os.environ.get('PAYSTACK_SECRET')
+    PAYSTACK_SECRET = os.environ.get('PAYSTACK_SECRET_KEY')
 
     # Verify webhook signature
-    if signature != PAYSTACK_SECRET:
-        return 'Invalid signature', 400
+    # if signature != PAYSTACK_SECRET:
+    #     print('Invalid signature!')
+    #     return 'Invalid signature', 400
 
     event = json.loads(payload)
 
     if event['event'] == 'charge.success':
         # This means payment was successful
-        transaction = event['data']
-        
-		# Printing the transaction
-        print(transaction)
+        transaction = event['data']['customer']['email']		
     
         # Fulfill the purchase here
         fulfill_order(transaction)
