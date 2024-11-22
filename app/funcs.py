@@ -51,7 +51,7 @@ def fulfill_order(user_email):
 def admin_only(func):
 	""" Decorator for giving access to authorized users only """
 	def wrapper(*args, **kwargs):
-		if current_user.is_authenticated and current_user.admin == 0:
+		if current_user.is_authenticated and current_user.admin == 1:
 			return func(*args, **kwargs)
 		else:
 			return "You are not Authorized to access this URL."

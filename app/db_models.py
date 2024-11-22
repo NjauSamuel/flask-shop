@@ -56,6 +56,8 @@ class Order(db.Model):
     status = db.Column(db.String(50), nullable=False)
     items = db.relationship("Ordered_item", backref="order")
 
+    user = db.relationship('User', back_populates='orders', lazy=True)
+
 
 class Ordered_item(db.Model):
     __tablename__ = "ordered_items"

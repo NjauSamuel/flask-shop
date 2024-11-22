@@ -16,8 +16,22 @@
 	{% endfor %}
 	{% endwith %}
 
+	<div style="min-height: 60vh;">
+	{% if phone and email %}
+		<div class="mb-3">
+			<strong>Customer Name:</strong> <span class="text-muted">{{ name }}</span>
+		</div>
+		<div class="mb-3">
+			<strong>Phone:</strong> <span class="text-muted">{{ phone }}</span>
+		</div>
+		<div class="mb-3">
+			<strong>Email:</strong> <span class="text-muted">{{ email }}</span>
+		</div>
+	{% endif %}
     <div class="forms">
 		{{ wtf.quick_form(form) }}
+	</div>
+
 	</div>
     
 {% endblock %}

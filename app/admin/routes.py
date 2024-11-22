@@ -46,6 +46,10 @@ def add():
 @admin_only
 def edit(type, id):
     if type == "item":
+
+        phone = 000
+        name = 'admin'
+        email = 'admin'
         item = Item.query.get(id)
         form = AddItemForm(
             name=item.name,
@@ -67,12 +71,15 @@ def edit(type, id):
             return redirect(url_for('admin.items'))
     elif type == "order":
         order = Order.query.get(id)
+        name = order.user.name
+        phone = order.user.phone
+        email = order.user.email
         form = OrderEditForm(status=order.status)
         if form.validate_on_submit():
             order.status = form.status.data
             db.session.commit()
             return redirect(url_for('admin.dashboard'))
-    return render_template('admin/add.html', form=form)
+    return render_template('admin/add.html', form=form, phone=phone, email=email, name=name)
 
 
 @admin.route('/delete/<int:id>')

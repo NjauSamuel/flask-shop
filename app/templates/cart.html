@@ -5,6 +5,7 @@
 {% endblock %}
 <script src="https://js.paystack.co/v2/inline.js"></script>
 {% block content %}
+	<div style="min-height: 60vh;">
 	{% with msgs =  get_flashed_messages(with_categories=True) %}
 	{% for c, msg in msgs %}
 		{% if c == 'error' %}
@@ -55,4 +56,5 @@
 		</form>
 	</div>
 	{% endif %}
+	</div>
 {% endblock %}
