@@ -140,3 +140,61 @@ form .btn {
 		padding: .3rem 1rem;
 	}
 }
+
+/*  The New Search */
+.custom-search-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .input-with-icon {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .custom-input {
+    padding: 10px 15px 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  .custom-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .icon-button {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .search-icon {
+    font-size: 20px;
+    color: #007bff;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .icon-button:hover .search-icon {
+    color: #0056b3; /* Darker blue on hover */
+  }
+
+  /* THE HERO SECTION BACKGROUND OPACITY */
+  .custom-bg {
+    background-color: rgba(255, 255, 255, 0.5); /* White background with 50% opacity */
+    transition: background-color 0.3s ease; /* Smooth transition */
+  }
+
+  .custom-bg:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* White background with 90% opacity on hover */
+  }

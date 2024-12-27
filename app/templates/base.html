@@ -15,15 +15,19 @@
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="{{ url_for('home') }}">Kossa Shop</a>
+      <a class="navbar-brand font-weight-bold" href="{{ url_for('home') }}">Kossa Shop</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
     
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0 ml-auto" action="{{ url_for('search') }}">
-          <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search" size="40" required>
-          <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+        <form class="custom-search-form ml-auto" action="{{ url_for('search') }}" method="GET">
+          <div class="input-with-icon">
+            <input class="custom-input" type="search" name="query" placeholder="Search" size="40" required>
+            <button type="submit" class="icon-button">
+              <i class="fa fa-search search-icon"></i>
+            </button>
+          </div>
         </form>
         <ul class="navbar-nav ml-auto">
           {% if not current_user.is_authenticated %}
