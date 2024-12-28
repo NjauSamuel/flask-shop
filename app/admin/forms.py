@@ -9,7 +9,7 @@ class AddItemForm(FlaskForm):
 	category = StringField("Category:", validators=[DataRequired(), Length(max=50)])
 	image = FileField("Image:", validators=[DataRequired()])
 	details = StringField("Details:", validators=[DataRequired()])
-	price_id = StringField("Stripe id:", validators=[DataRequired()])
+	price_id = StringField("Price Id: (Unique String)", validators=[DataRequired()])
 	submit = SubmitField("Add")
 
 class OrderEditForm(FlaskForm):

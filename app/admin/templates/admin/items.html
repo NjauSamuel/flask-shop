@@ -18,6 +18,10 @@
 
     {% if not items %}
 		<div class="flash-error">No items have been registered yet.</div>
+
+		<div class="add-new btn-success btn">
+			<a href="{{ url_for('admin.add') }}" class="text-light">Add new item</a>
+		</div>
 	{% else %}
     <div class="add-new btn-success btn">
         <a href="{{ url_for('admin.add') }}" class="text-light">Add new item</a>
