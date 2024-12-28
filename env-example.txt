@@ -2,6 +2,11 @@ SECRET_KEY=
 DB_URI="sqlite:///test.db"
 EMAIL=
 PASSWORD=
-STRIPE_PUBLIC=
-STRIPE_PRIVATE=
-ENDPOINT_SECRET=
+
+APP_ENV="local" #Remember to change this to production in a production environment. 
+
+PAYSTACK_SECRET_KEY=
+PAYSTACK_PUBLIC_KEY=
+
+LIVE_PAYSTACK_SECRET_KEY=
+LIVE_PAYSTACK_PUBLIC_KEY=

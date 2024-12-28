@@ -184,8 +184,20 @@ def search():
 	return render_template('home.html', items=items, search=True, query=query)
 
 
-# Paystack API Key (use test key for testing)
-PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+# Paystack API Key
+
+# Fetch APP_ENV from the environment or default to 'production' if not set
+APP_ENV = os.environ.get('APP_ENV', 'production').lower()
+
+# Conditionally set the Paystack Secret Key
+if APP_ENV == 'local':
+    PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+else:
+    PAYSTACK_SECRET_KEY = os.environ.get('LIVE_PAYSTACK_SECRET_KEY')
+
+# Ensure the key is not None
+if PAYSTACK_SECRET_KEY is None:
+    raise ValueError("PAYSTACK_SECRET_KEY is not configured correctly for the current environment.")
 
 
 @app.route('/payment_success')
