@@ -17,11 +17,22 @@ Kossa Shop is a Python-based e-commerce application built using Flask. It provid
 ## Screenshot
 
 **![Home Page](app/static/images/Home.png)**
+
+---
+
 **![Products Page](app/static/images/Products.png)**
+
+---
+
 **![Paystack Checkout](app/static/images/PaystackCheckout.png)**
+
+---
+
 **![Admin Dashboard](app/static/images/AdminDashboard.png)**
 
-Add a screenshot of the application’s UI here to give users a quick visual overview of Kossa Shop.
+---
+
+Quick visual overview of Kossa Shop.
 
 ---
 
