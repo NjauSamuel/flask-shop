@@ -28,7 +28,7 @@
 			<th>Order status</th>
 			<th>Operations</th>
         </tr>
-    {% for order in orders %}
+    {% for order in orders | sort(attribute='date', reverse=True) %}
         <tr>
             <td>{{ order.id }}</td>
             <td>{{ order.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
