@@ -30,18 +30,19 @@
 			<th>Ordered items</th>
 			<th>Order status</th>
         </tr>
-    {% for order in orders %}
-        <tr>
-            <td>{{ order.id }}</td>
-            <td>{{ order.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+	{% for order in orders | sort(attribute='date', reverse=True) %}
+		<tr>
+			<td>{{ order.id }}</td>
+			<td>{{ order.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
 			<td>
 				{% for i in order.items %}
 					{{ i.item.name }} x <span class="success">{{ i.quantity }}</span><br>
 				{% endfor %}
 			</td>
 			<td>{{ order.status }}</td>
-        </tr>
-    {% endfor %}
+		</tr>
+	{% endfor %}
+	
     </table>
 
 	{% endif %}
