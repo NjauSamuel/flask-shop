@@ -253,7 +253,7 @@ def paystack_webhook():
     signature = request.headers.get('X-Paystack-Signature')
 
     # Paystack webhook secret key (must be set in Paystack dashboard)
-    PAYSTACK_SECRET = os.environ.get('PAYSTACK_SECRET_KEY')
+    PAYSTACK_SECRET = PAYSTACK_SECRET_KEY
 
 	# Compute the expected signature
     computed_signature = hmac.new(
