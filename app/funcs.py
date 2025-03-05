@@ -37,6 +37,9 @@ def fulfill_order(user_email):
 	
 	uid = user.id
 	order = Order(uid=uid, date=datetime.datetime.now(), status="processing")
+
+	# Add the following patch if the server time is different from your local time. 
+	#order = Order(uid=uid, date=datetime.datetime.now() + datetime.timedelta(hours=8), status="processing")
 	db.session.add(order)
 	db.session.commit()
 
